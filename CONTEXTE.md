@@ -82,6 +82,8 @@ Tout est en JavaScript classique, sans build ni module, dans un namespace global
 - **Détail d'une partie** : `#/match/{id}?p={compte}` (`js/pages/match.js`), ouvert au clic sur une partie de l'historique du profil. Score par équipe (Ambre/Saphir), courbe d'écart d'âmes, puis pour chaque joueur : héros, KDA, âmes, LH/denies, dégâts/soins, objets en fin de partie (achats non revendus), bouton POV si c'est un streamer en live. Données : `/v1/matches/{id}/metadata`.
 - **Site public** : prêt à déployer sur Render (`render.yaml`, `package.json`) ou via `Dockerfile`. Guide pas à pas dans `DEPLOIEMENT.md`. Variables : `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`, `PUBLIC_URL`, `SESSION_SECRET`, `HIDE_STREAMERS=1` (onglet Streamers masqué sur le site public, comme dans l'app). Le serveur ne sert plus les fichiers internes (server.js, notes, streamers.json…). **En ligne sur https://dlm-gg.onrender.com** (Render, offre gratuite, Blueprint exs-db9ttq3bc2fs73d76960). Code sur GitHub `lepetitlaminei-creator/dlm-gg` (branche `main`, ajouté au projet) : chaque push redéploie le site. Pour publier une modif : copier `deadlock-app` dans le dépôt (sans `.env` ni `.session-secret`), commit, push.
 
+- **Référencement Google** : titre, description, balises og:* et favicon dans `index.html`. Le serveur ajoute `canonical`/`og:url` d'après `PUBLIC_URL`, génère `/robots.txt` et `/sitemap.xml`, et insère la balise de validation Search Console si la variable `GOOGLE_SITE_VERIFICATION` est définie dans Render (valeur `content` de la balise HTML fournie par Google). Après validation, soumettre `sitemap.xml` dans Search Console. Le domaine `dlm.gg` est déjà pris (DLM Architects, Guernesey) : pistes proposées `dlmgg.com`, `dlm-gg.com`, `dlmgg.gg`. Une fois un domaine acheté : Render > Settings > Custom Domains, enregistrements DNS chez le registrar, puis mettre `PUBLIC_URL` à jour.
+
 ## Points à vérifier sur les vraies données
 
 1. **Filtre des mains** : la Lens envoie `min_hero_matches=15` à `/v1/analytics/player-stats/metrics`. La doc de l'API montre ce paramètre sur `hero-stats`, sans confirmation pour `player-stats/metrics`. Test : avec un même héros, la note doit changer entre « Tous les joueurs » et « Mains [héros] ». Si elle ne bouge pas, le filtre est ignoré. Il faudra alors une autre méthode, par exemple récupérer des comptes qui jouent beaucoup ce héros et les passer en `account_ids`, qui accepte jusqu'à 1000 comptes.
@@ -96,7 +98,6 @@ Tout est en JavaScript classique, sans build ni module, dans un namespace global
 
 ## Idées pas encore faites
 
-- Mettre le site en ligne (hébergement, `PUBLIC_URL`) et éventuellement créer un dépôt GitHub.
+- Brancher un nom de domaine personnalisé sur le site Render.
 - Suivi de la Lens dans le temps (évolution de la note semaine après semaine).
 - Conseils de la Lens plus précis par héros.
-- Page de détail d'une partie (build acheté, timeline des âmes).
