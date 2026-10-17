@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DLM · Stats Deadlock</title>
+  <meta name="description" content="Tier list, builds, matchups, classement et profils pour Deadlock.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/tierlist"><span class="brand-mark">DL</span><span class="brand-name">DLM<small>.gg</small></span></a>
+    <nav class="nav">
+      <a href="#/tierlist" data-nav="tierlist">Tier list &amp; Builds</a>
+      <a href="#/matchups" data-nav="matchups">Matchups</a>
+      <a href="#/leaderboard" data-nav="leaderboard">Classement</a>
+      <a href="#/player" data-nav="player">Profil</a>
+      <a href="#/streamers" data-nav="streamers">Streamers</a>
+    </nav>
+    <form class="search" id="global-search" autocomplete="off">
+      <input id="global-search-input" type="search" placeholder="Héros, joueur ou ID Steam…" aria-label="Rechercher">
+      <kbd>Ctrl K</kbd>
+      <div class="search-pop" id="global-search-pop" hidden></div>
+    </form>
+    <div class="auth" id="auth"></div>
+  </header>
+
+  <main id="app" class="container"></main>
+
+  <footer class="footer container">
+    <p>Données : <a href="https://deadlock-api.com" target="_blank" rel="noopener">Deadlock API</a> (communautaire). Projet non affilié à Valve.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/twitch.js"></script>
+  <script src="js/pages/tierlist.js"></script>
+  <script src="js/pages/hero.js"></script>
+  <script src="js/pages/matchups.js"></script>
+  <script src="js/pages/leaderboard.js"></script>
+  <script src="js/lens.js"></script>
+  <script src="js/pages/player.js"></script>
+  <script src="js/pages/match.js"></script>
+  <script src="js/pages/streamers.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

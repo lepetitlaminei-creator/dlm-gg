@@ -1,0 +1,21 @@
+# Déploiement sur Render (https://render.com) : New > Blueprint, puis choisir ce dépôt.
+# Les valeurs marquées sync: false sont à remplir dans le tableau de bord Render, jamais dans le dépôt.
+services:
+  - type: web
+    name: dlm-gg
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/status
+    envVars:
+      - key: TWITCH_CLIENT_ID
+        sync: false
+      - key: TWITCH_CLIENT_SECRET
+        sync: false
+      - key: PUBLIC_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: HIDE_STREAMERS
+        value: "1"

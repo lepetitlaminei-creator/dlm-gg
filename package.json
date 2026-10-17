@@ -1,0 +1,13 @@
+{
+  "name": "dlm-gg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DLM.gg : tier list, builds, matchups, classement, profil et Lens pour Deadlock.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

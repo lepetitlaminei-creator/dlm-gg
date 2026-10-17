@@ -1,0 +1,5 @@
+.env
+.session-secret
+CONTEXTE.md
+streamers-otp.md
+node_modules
