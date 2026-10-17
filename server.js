@@ -207,6 +207,8 @@ function send(res, status, body, type = 'application/json; charset=utf-8') {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
   try {
+    if (url.pathname === '/robots.txt') return send(res, 200, `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /auth/\nSitemap: ${origin(req)}/sitemap.xml\n`, 'text/plain; charset=utf-8');
+    if (url.pathname === '/sitemap.xml') return send(res, 200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin(req)}/</loc><changefreq>daily</changefreq></url></urlset>\n`, 'application/xml; charset=utf-8');
     if (url.pathname === '/api/status') return send(res, 200, { twitch: TWITCH_READY, steam_login: true });
     if (url.pathname === '/api/me') return send(res, 200, { account_id: readSession(req) });
     if (url.pathname === '/auth/steam') return redirect(res, steamLoginUrl(req));
@@ -238,10 +240,17 @@ const server = http.createServer(async (req, res) => {
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
     if (!fs.existsSync(file)) return send(res, 404, 'Introuvable', 'text/plain');
     /* App Windows ou site public : page d'accueil sans l'onglet Streamers. */
-    if (HIDE_STREAMERS && file === path.join(ROOT, 'index.html')) {
-      const html = fs.readFileSync(file, 'utf8')
-        .replace(/\s*<a href="#\/streamers"[^>]*>Streamers<\/a>/, '')
-        .replace('<script src="js/api.js"></script>', '<script>window.DLM_NO_STREAMERS = true;</script>\n  <script src="js/api.js"></script>');
+    if (file === path.join(ROOT, 'index.html')) {
+      let html = fs.readFileSync(file, 'utf8');
+      /* Référencement : adresse canonique, et balise de validation Google Search Console si fournie. */
+      const base = origin(req).replace(/["<>\s]/g, '');
+      const head = [`<link rel="canonical" href="${base}/">`, `<meta property="og:url" content="${base}/">`];
+      if (process.env.GOOGLE_SITE_VERIFICATION) head.push(`<meta name="google-site-verification" content="${String(process.env.GOOGLE_SITE_VERIFICATION).replace(/[^\w-]/g, '')}">`);
+      html = html.replace('</head>', `  ${head.join('\n  ')}\n</head>`);
+      if (HIDE_STREAMERS) {
+        html = html.replace(/\s*<a href="#\/streamers"[^>]*>Streamers<\/a>/, '')
+          .replace('<script src="js/api.js"></script>', '<script>window.DLM_NO_STREAMERS = true;</script>\n  <script src="js/api.js"></script>');
+      }
       return send(res, 200, html, MIME['.html']);
     }
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
